@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Davetiyem - Vahit KESKİN & Bahar YILGIN Düğün Davetiyesi</title>
+  <meta name="description" content="Vahit KESKİN ve Bahar YILGIN'ın düğün davetiyesine hoş geldiniz. Şanlıurfa Viranşehir & Mardin düğün detayları, konum, LCV ve geri sayım.">
+  <meta name="theme-color" content="#FDFBF7">
+  
+  <!-- Open Graph / Meta -->
+  <meta property="og:title" content="Vahit & Bahar Evleniyor!">
+  <meta property="og:description" content="Sevgiyle başlayan hikayemizi bir ömürlük imzaya dönüştürürken yanımızda olmanız dileğiyle...">
+  <meta property="og:image" content="assets/couple/mardin.jpg">
+  <meta property="og:type" content="website">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Great+Vibes&family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            wedding: {
+              ivory: '#FDFBF7',
+              ivoryDark: '#F7F3EB',
+              cream: '#FAF6F0',
+              gold: '#D4AF37',
+              goldDark: '#B8860B',
+              goldLight: '#F3E5AB',
+              roseGold: '#B76E79',
+              charcoal: '#2C2C2C',
+              slate: '#4A4A4A',
+              sand: '#E8DFD1'
+            }
+          },
+          fontFamily: {
+            serif: ['Playfair Display', 'Cormorant Garamond', 'serif'],
+            script: ['Great Vibes', 'cursive'],
+            cormorant: ['Cormorant Garamond', 'serif'],
+            sans: ['Inter', 'Montserrat', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-wedding-ivory text-wedding-charcoal font-sans antialiased overflow-x-hidden selection:bg-wedding-gold/20 selection:text-wedding-goldDark min-h-screen relative">
+
+  <!-- Canvas Ambient Particle Background (Golden Dust & Falling Rose Petals) -->
+  <canvas id="ambientCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-70"></canvas>
+
+  <!-- Background Audio Element -->
+  <audio id="bgAudio" loop preload="auto">
+    <source src="assets/audio/bg-music.mp3" type="audio/mpeg">
+    <source src="assets/audio/bg-music.wav" type="audio/wav">
+    Browserınız ses oynatmayı desteklemiyor.
+  </audio>
+
+  <!-- Floating Music Toggle Player (Fixed Top Right) -->
+  <div id="stickyMusicPlayer" class="fixed top-4 right-4 z-40 transition-all duration-300 transform translate-y-0 opacity-100">
+    <button id="musicToggleBtn" aria-label="Müzik Aç/Kapat" class="group flex items-center gap-2.5 bg-white/90 backdrop-blur-md border border-wedding-gold/40 shadow-lg hover:shadow-wedding-gold/20 px-3.5 py-2 rounded-full transition-all duration-300 hover:scale-105 active:scale-95 text-xs font-medium text-wedding-charcoal">
+      <span class="relative flex h-3 w-3">
+        <span id="musicPulse" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-wedding-gold opacity-75 hidden"></span>
+        <span id="musicDot" class="relative inline-flex rounded-full h-3 w-3 bg-wedding-gold/50"></span>
+      </span>
+      <img src="assets/icons/music.svg" id="musicIcon" alt="Piyano" class="w-4 h-4 text-wedding-gold transform group-hover:rotate-12 transition-transform duration-300">
+      <span id="musicBtnText" class="font-cormorant text-sm font-semibold tracking-wider uppercase text-wedding-charcoal">Piyano Açık</span>
+      
+      <!-- Animated Soundbars (Equalizer) -->
+      <div id="soundBars" class="flex items-end gap-0.5 h-3.5 ml-1 hidden">
+        <span class="w-0.5 bg-wedding-gold rounded-full animate-soundbar-1"></span>
+        <span class="w-0.5 bg-wedding-gold rounded-full animate-soundbar-2"></span>
+        <span class="w-0.5 bg-wedding-gold rounded-full animate-soundbar-3"></span>
+      </div>
+    </button>
+  </div>
+
+  <!-- A. Açılış / Giriş Ekranı (Splash Screen with 3D Zarf Animasyonu) -->
+  <section id="splashScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-[#1A1817]/95 backdrop-blur-xl px-4 transition-all duration-1000">
+    <div class="max-w-md w-full text-center flex flex-col items-center justify-center relative">
+      
+      <!-- Brand Crest -->
+      <div class="mb-6 opacity-0 animate-fade-in-down" style="animation-delay: 200ms;">
+        <span class="text-wedding-gold text-sm font-bold tracking-[0.35em] uppercase block mb-1">DAVETİYEM</span>
+        <div class="flex items-center justify-center gap-3">
+          <div class="h-[1px] w-8 bg-wedding-gold/40"></div>
+          <span class="text-wedding-gold text-lg font-script">Özel Davetiye</span>
+          <div class="h-[1px] w-8 bg-wedding-gold/40"></div>
+        </div>
+      </div>
+
+      <!-- 3D Luxury Envelope Wrapper -->
+      <div id="envelopeContainer" class="envelope-wrapper relative cursor-pointer group my-4 w-72 sm:w-80 h-48 sm:h-52 perspective-1000">
+        <!-- Envelope Back -->
+        <div class="envelope-back bg-[#F4ECE1] border-2 border-wedding-gold/50 rounded-lg shadow-2xl absolute inset-0 overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-tr from-wedding-gold/10 via-transparent to-wedding-gold/5"></div>
+        </div>
+
+        <!-- Invitation Card (Inside Envelope) -->
+        <div id="envelopeCard" class="envelope-card absolute top-2 left-3 right-3 bg-wedding-ivory border border-wedding-gold/40 rounded p-4 shadow-md text-center transform transition-transform duration-700">
+          <p class="font-serif italic text-xs text-wedding-goldDark mb-1">Evleniyoruz</p>
+          <h2 class="font-serif text-lg font-bold text-wedding-charcoal">Vahit & Bahar</h2>
+          <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">20 Ağustos 2026</p>
+        </div>
+
+        <!-- Envelope Flap (Top) -->
+        <div id="envelopeFlap" class="envelope-flap absolute top-0 left-0 right-0 h-28 bg-[#EFE5D5] border-t-2 border-x-2 border-wedding-gold/40 origin-top transition-transform duration-700 ease-in-out z-20" style="clip-path: polygon(0 0, 50% 100%, 100% 0);"></div>
+
+        <!-- Wax Seal (Mühür) -->
+        <div id="waxSeal" class="wax-seal absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 transition-all duration-500 transform group-hover:scale-110">
+          <div class="w-16 h-16 rounded-full bg-gradient-to-br from-[#C5A059] via-[#D4AF37] to-[#8C6D27] p-1 shadow-2xl flex items-center justify-center border-2 border-wedding-goldLight/60">
+            <div class="w-full h-full rounded-full border border-wedding-goldLight/40 flex flex-col items-center justify-center text-white font-serif font-bold text-sm tracking-tighter shadow-inner">
+              <span class="text-[11px] font-script leading-tight">V & B</span>
+              <span class="text-[8px] uppercase tracking-widest opacity-90">Davet</span>
+            </div>
+          </div>
+          <div class="absolute inset-0 rounded-full animate-ping bg-wedding-gold/30 pointer-events-none"></div>
+        </div>
+      </div>
+
+      <!-- Couple Names & Subtitle -->
+      <div class="mt-6 space-y-2">
+        <h1 class="font-serif text-3xl sm:text-4xl text-wedding-ivory font-semibold tracking-wide">
+          Vahit KESKİN <span class="font-script text-wedding-gold text-4xl sm:text-5xl font-normal">&</span> Bahar YILGIN
+        </h1>
+        <p class="text-wedding-goldLight/80 text-sm font-light italic">
+          Bu mutlu günümüzde sizleri de aramızda görmekten onur duyarız.
+        </p>
+      </div>
+
+      <!-- Enter / Open Button -->
+      <button id="openInvitationBtn" class="mt-8 relative group overflow-hidden rounded-full p-[2px] focus:outline-none focus:ring-2 focus:ring-wedding-gold/50 shadow-xl transition-transform duration-300 active:scale-95">
+        <span class="absolute inset-0 bg-gradient-to-r from-wedding-gold via-wedding-goldLight to-wedding-goldDark animate-shimmer"></span>
+        <div class="relative px-8 py-3.5 bg-[#252220] rounded-full transition-all duration-300 group-hover:bg-transparent flex items-center gap-3">
+          <img src="assets/icons/music.svg" alt="Music" class="w-5 h-5 text-wedding-gold animate-bounce">
+          <span class="font-cormorant text-base sm:text-lg font-bold tracking-widest text-wedding-gold uppercase">Davetiyeyi Aç & Müziği Başlat</span>
+        </div>
+      </button>
+      
+      <p class="text-xs text-gray-400 mt-4 flex items-center justify-center gap-1.5">
+        <span class="inline-block w-1.5 h-1.5 rounded-full bg-wedding-gold animate-pulse"></span>
+        Müzikli ve İnteraktif Deneyim
+      </p>
+
+    </div>
+  </section>
+
+  <!-- MAIN APP CONTAINER (Mobile-First Centered Container) -->
+  <main id="mainContent" class="max-w-md sm:max-w-lg md:max-w-xl mx-auto min-h-screen bg-wedding-ivory border-x border-wedding-gold/20 shadow-2xl relative z-10 pb-20 opacity-0 transition-opacity duration-1000">
+
+    <!-- HERO HEADER SECTION -->
+    <header class="relative pt-12 pb-8 px-6 text-center overflow-hidden bg-gradient-to-b from-wedding-cream via-wedding-ivory to-wedding-ivory border-b border-wedding-gold/15">
+      <!-- Decorative Corner Flourishes -->
+      <div class="absolute top-3 left-3 w-10 h-10 border-t-2 border-l-2 border-wedding-gold/40 rounded-tl-lg pointer-events-none"></div>
+      <div class="absolute top-3 right-3 w-10 h-10 border-t-2 border-r-2 border-wedding-gold/40 rounded-tr-lg pointer-events-none"></div>
+
+      <!-- Top Badge -->
+      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-wedding-gold/10 border border-wedding-gold/30 text-wedding-goldDark text-xs font-semibold tracking-[0.2em] uppercase mb-4 shadow-sm">
+        <span class="w-1.5 h-1.5 rounded-full bg-wedding-gold"></span>
+        Davetiyem
+        <span class="w-1.5 h-1.5 rounded-full bg-wedding-gold"></span>
+      </div>
+
+      <!-- Main Titles (Vahit KESKİN & Bahar YILGIN) -->
+      <h1 class="font-serif text-3xl sm:text-4xl font-bold text-wedding-charcoal tracking-wide mb-1">
+        Vahit KESKİN
+      </h1>
+      <div class="my-1 flex items-center justify-center gap-3">
+        <div class="h-[1px] w-12 bg-gradient-to-r from-transparent to-wedding-gold"></div>
+        <span class="font-script text-4xl sm:text-5xl text-wedding-gold font-normal px-2">&</span>
+        <div class="h-[1px] w-12 bg-gradient-to-l from-transparent to-wedding-gold"></div>
+      </div>
+      <h1 class="font-serif text-3xl sm:text-4xl font-bold text-wedding-charcoal tracking-wide mb-4">
+        Bahar YILGIN
+      </h1>
+
+      <!-- Date Badge -->
+      <div class="inline-block relative">
+        <div class="font-cormorant text-lg font-semibold tracking-widest text-wedding-goldDark uppercase px-4 py-1.5 border-y border-wedding-gold/30">
+          Ağustos 2026
+        </div>
+      </div>
+
+      <!-- Decorative Divider -->
+      <div class="mt-6 flex justify-center items-center gap-2">
+        <span class="text-wedding-gold text-xs">✦</span>
+        <span class="text-wedding-gold text-sm">✦</span>
+        <span class="text-wedding-gold text-xs">✦</span>
+      </div>
+    </header>
+
+    <!-- C. ÇOKLU PROGRAM / ŞEHİR SEKMESİ (CITY TABS) -->
+    <section class="py-6 px-4 bg-wedding-cream/60 border-b border-wedding-gold/15">
+      <div class="text-center mb-4">
+        <span class="text-xs font-semibold tracking-[0.2em] uppercase text-wedding-goldDark">Etkinlik Programı</span>
+        <h2 class="font-serif text-xl sm:text-2xl font-bold text-wedding-charcoal mt-1">Düğün Programı</h2>
+        <p class="text-xs text-wedding-slate mt-0.5">Lütfen katılmak istediğiniz düğün sekmesini seçiniz</p>
+      </div>
+
+      <!-- Tabs Nav Buttons -->
+      <div class="grid grid-cols-2 gap-2 p-1.5 bg-white/80 rounded-2xl border border-wedding-gold/30 shadow-inner max-w-sm mx-auto">
+        <button id="tabIstanbulBtn" onclick="switchCityTab('mardin')" class="city-tab-btn active transition-all duration-300 py-3 px-4 rounded-xl flex flex-col items-center justify-center gap-1 font-serif text-sm font-semibold border text-wedding-goldDark bg-wedding-ivory shadow-md border-wedding-gold/40">
+          <div class="flex items-center gap-1.5">
+            <span class="text-base">🕌</span>
+            <span class="tracking-wider uppercase text-xs sm:text-sm font-bold">1. MARDİN & VİRANŞEHİR</span>
+          </div>
+          <span class="text-[10px] font-sans font-normal opacity-80">20 Ağustos 2026</span>
+        </button>
+
+        <button id="tabKocaeliBtn" onclick="switchCityTab('kadin')" class="city-tab-btn transition-all duration-300 py-3 px-4 rounded-xl flex flex-col items-center justify-center gap-1 font-serif text-sm font-semibold text-wedding-slate hover:text-wedding-charcoal">
+          <div class="flex items-center gap-1.5">
+            <span class="text-base">👰</span>
+            <span class="tracking-wider uppercase text-xs sm:text-sm font-bold">2. DAMAT & GELİN</span>
+          </div>
+          <span class="text-[10px] font-sans font-normal opacity-80">27 Ağustos 2026</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- D. DİNAMİK ÇİFT FOTOĞRAFI VEYA ŞEHİR DETAYLARI -->
+    <section class="py-8 px-5">
+      <!-- Framed Couple Photo Card -->
+      <div class="relative group rounded-3xl p-3 bg-gradient-to-b from-wedding-gold/30 via-wedding-gold/10 to-wedding-gold/20 shadow-2xl border border-wedding-gold/40 overflow-hidden mb-8">
+        
+        <div class="relative rounded-2xl overflow-hidden aspect-[4/5] bg-wedding-cream shadow-inner">
+          <img id="couplePhoto" src="assets/couple/mardin.jpg" alt="Vahit KESKİN & Bahar YILGIN Mardin" class="w-full h-full object-cover transform transition-all duration-700 group-hover:scale-105">
+          
+          <!-- Gradient Overlay -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20"></div>
+
+          <!-- Top City Tag -->
+          <div class="absolute top-4 left-4 bg-black/40 backdrop-blur-md border border-white/30 text-white px-3 py-1 rounded-full text-xs font-semibold tracking-widest uppercase flex items-center gap-1.5 shadow-lg">
+            <span id="activeCityBadgeDot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span id="activeCityBadgeText">MARDİN & VİRANŞEHİR</span>
+          </div>
+
+          <!-- Bottom Photo Overlay Text -->
+          <div class="absolute bottom-4 left-4 right-4 text-white text-center">
+            <p id="activeCityTitle" class="font-serif text-xl sm:text-2xl font-bold tracking-wide text-wedding-goldLight drop-shadow-md">
+              Şanlıurfa Viranşehir - Evleniyoruz
+            </p>
+            <p id="activeCityVenueHeader" class="text-xs font-sans text-white/90 font-light mt-0.5 drop-shadow">
+              Şanlıurfa Viranşehir Düğün Salonu
+            </p>
+          </div>
+        </div>
+
+        <!-- Aesthetic Frame Accents -->
+        <div class="absolute -bottom-2 -right-2 w-16 h-16 bg-wedding-gold/20 rounded-full blur-xl pointer-events-none"></div>
+      </div>
+
+      <!-- Invitation Card Text -->
+      <div class="bg-white/90 backdrop-blur-sm border border-wedding-gold/30 rounded-2xl p-6 shadow-xl text-center relative overflow-hidden mb-8">
+        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-wedding-gold to-transparent"></div>
+
+        <img src="assets/icons/heart.svg" alt="Heart" class="w-6 h-6 mx-auto text-wedding-gold mb-3 animate-pulse opacity-80">
+
+        <h3 class="font-serif text-xl font-bold text-wedding-charcoal mb-3">
+          Ömür Boyu Birlikteliğe Davet
+        </h3>
+
+        <p class="font-cormorant text-lg italic text-wedding-charcoal/90 leading-relaxed font-semibold">
+          "Sevgiyle başlayan hikayemizi bir ömürlük imzaya dönüştürürken, bu güzel anın şahidi olmanız bizim için çok kıymetli."
+        </p>
+
+        <div class="mt-4 pt-4 border-t border-wedding-gold/20 flex items-center justify-center gap-2 text-xs font-medium text-wedding-goldDark uppercase tracking-widest">
+          <span>Vahit KESKİN</span>
+          <span class="text-wedding-gold">&</span>
+          <span>Bahar YILGIN</span>
+        </div>
+      </div>
+
+      <!-- E. CANLI GERİ SAYIM SAYACI (COUNTDOWN TIMER) -->
+      <div class="bg-gradient-to-br from-wedding-cream via-white to-wedding-ivory border border-wedding-gold/30 rounded-2xl p-5 shadow-xl text-center mb-8 relative">
+        
+        <div class="flex items-center justify-center gap-2 mb-3">
+          <img src="assets/icons/clock.svg" alt="Clock" class="w-4 h-4 text-wedding-gold">
+          <span class="text-xs font-bold tracking-[0.2em] uppercase text-wedding-goldDark">Büyük Günü Beklerken</span>
+        </div>
+
+        <h3 id="countdownHeaderCity" class="font-serif text-lg font-bold text-wedding-charcoal mb-4">
+          Viranşehir Düğününe Kalan Zaman
+        </h3>
+
+        <!-- 4 Boxes Live Countdown Grid -->
+        <div class="grid grid-cols-4 gap-2 sm:gap-3">
+          
+          <!-- DAYS -->
+          <div class="bg-wedding-ivory border border-wedding-gold/30 rounded-xl p-2.5 sm:p-3 shadow-md flex flex-col items-center">
+            <span id="countDays" class="font-serif text-2xl sm:text-3xl font-bold text-wedding-charcoal transition-all duration-300">00</span>
+            <span class="text-[10px] sm:text-xs font-bold tracking-wider text-wedding-goldDark uppercase mt-1">GÜN</span>
+          </div>
+
+          <!-- HOURS -->
+          <div class="bg-wedding-ivory border border-wedding-gold/30 rounded-xl p-2.5 sm:p-3 shadow-md flex flex-col items-center">
+            <span id="countHours" class="font-serif text-2xl sm:text-3xl font-bold text-wedding-charcoal transition-all duration-300">00</span>
+            <span class="text-[10px] sm:text-xs font-bold tracking-wider text-wedding-goldDark uppercase mt-1">SAAT</span>
+          </div>
+
+          <!-- MINUTES -->
+          <div class="bg-wedding-ivory border border-wedding-gold/30 rounded-xl p-2.5 sm:p-3 shadow-md flex flex-col items-center">
+            <span id="countMinutes" class="font-serif text-2xl sm:text-3xl font-bold text-wedding-charcoal transition-all duration-300">00</span>
+            <span class="text-[10px] sm:text-xs font-bold tracking-wider text-wedding-goldDark uppercase mt-1">DAKİKA</span>
+          </div>
+
+          <!-- SECONDS -->
+          <div class="bg-wedding-ivory border border-wedding-gold/30 rounded-xl p-2.5 sm:p-3 shadow-md flex flex-col items-center border-wedding-gold/50 relative overflow-hidden">
+            <span id="countSeconds" class="font-serif text-2xl sm:text-3xl font-bold text-wedding-goldDark transition-all duration-300 animate-pulse">00</span>
+            <span class="text-[10px] sm:text-xs font-bold tracking-wider text-wedding-gold uppercase mt-1">SANİYE</span>
+          </div>
+
+        </div>
+
+        <!-- Add to Calendar Button -->
+        <button id="addToCalendarBtn" onclick="downloadCalendarInvite()" class="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-wedding-goldDark hover:text-wedding-charcoal bg-wedding-gold/10 hover:bg-wedding-gold/20 border border-wedding-gold/30 px-4 py-2 rounded-full transition-all">
+          <img src="assets/icons/calendar.svg" alt="Calendar" class="w-3.5 h-3.5">
+          <span>Takvime Ekle (.ics / Google)</span>
+        </button>
+      </div>
+
+      <!-- PROGRAM & VENUE DETAILS CARD -->
+      <div class="bg-white/90 border border-wedding-gold/30 rounded-2xl p-6 shadow-xl space-y-4 mb-8">
+        <div class="flex items-center justify-between border-b border-wedding-gold/20 pb-3">
+          <div class="flex items-center gap-2.5">
+            <div class="p-2 rounded-lg bg-wedding-gold/10 text-wedding-goldDark">
+              <img src="assets/icons/calendar.svg" alt="Tarih" class="w-5 h-5">
+            </div>
+            <div>
+              <p class="text-[10px] text-wedding-slate uppercase font-bold tracking-wider">Tarih & Saat</p>
+              <p id="detailDateTime" class="font-serif text-base font-bold text-wedding-charcoal">20 Ağustos 2026 - 19:00</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between border-b border-wedding-gold/20 pb-3">
+          <div class="flex items-center gap-2.5">
+            <div class="p-2 rounded-lg bg-wedding-gold/10 text-wedding-goldDark">
+              <img src="assets/icons/map-pin.svg" alt="Konum" class="w-5 h-5">
+            </div>
+            <div>
+              <p class="text-[10px] text-wedding-slate uppercase font-bold tracking-wider">Düğün Salonu / Mekan</p>
+              <p id="detailVenueName" class="font-serif text-base font-bold text-wedding-charcoal">Şanlıurfa Viranşehir Düğün Salonu</p>
+              <p id="detailVenueAddress" class="text-xs text-gray-500 mt-0.5">Kışla Mah. Ceylanpınar Cad. Viranşehir / Şanlıurfa</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- G. HARİTA VE KONUM YÖNLENDİRMESİ BUTTONS -->
+        <div class="pt-2 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <a id="btnGoogleMaps" href="https://maps.google.com/?q=Viran%C5%9Fehir+D%C3%BC%C4%9F%C3%BCn+Salonu+%C5%9Eanl%C4%B1urfa" target="_blank" class="flex items-center justify-center gap-2 bg-wedding-gold hover:bg-wedding-goldDark text-white px-4 py-2.5 rounded-xl text-xs font-semibold shadow-md transition-colors">
+            <img src="assets/icons/map-pin.svg" alt="Map" class="w-4 h-4 invert">
+            <span>Google Haritalar'da Aç</span>
+          </a>
+
+          <a id="btnAppleMaps" href="https://maps.apple.com/?q=Viran%C5%9Fehir+D%C3%BC%C4%9F%C3%BCn+Salonu+%C5%9Eanl%C4%B1urfa" target="_blank" class="flex items-center justify-center gap-2 bg-wedding-charcoal hover:bg-black text-white px-4 py-2.5 rounded-xl text-xs font-semibold shadow-md transition-colors">
+            <span>Apple Maps Yol Tarifi</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- F. QR KOD VE PAYLAŞIM BUTONLARI -->
+      <div class="bg-gradient-to-b from-wedding-cream/80 to-white border border-wedding-gold/30 rounded-2xl p-6 shadow-xl text-center mb-8">
+        <span class="text-xs font-bold tracking-[0.2em] uppercase text-wedding-goldDark">Dijital Erişilebilirlik</span>
+        <h3 class="font-serif text-xl font-bold text-wedding-charcoal mt-1 mb-4">QR Kod ile Hızlı Erişim</h3>
+
+        <!-- QR Code Display Box -->
+        <div class="bg-white p-4 rounded-xl border-2 border-wedding-gold/40 inline-block shadow-md mb-4 relative group">
+          <img id="qrCodeImg" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https%3A%2F%2Fdavetiyem.com%2Fvahit-bahar" alt="Davetiye QR Kodu" class="w-40 h-40 object-contain mx-auto">
+          <p class="text-[10px] text-gray-400 mt-2 font-mono">Taramak için kameranızı doğrultun</p>
+        </div>
+
+        <!-- Social & Sharing Action Buttons -->
+        <div class="space-y-2.5 max-w-sm mx-auto">
+          
+          <!-- 1. Davetiyeyi Paylaş -->
+          <button onclick="shareInvitation()" class="w-full flex items-center justify-center gap-2.5 bg-wedding-gold text-white hover:bg-wedding-goldDark px-4 py-3 rounded-xl text-xs font-bold tracking-wider uppercase shadow-md transition-all active:scale-98">
+            <img src="assets/icons/share.svg" alt="Share" class="w-4 h-4 filter brightness-200">
+            <span>Davetiyeyi Paylaş (Bağlantı Kopyala)</span>
+          </button>
+
+          <!-- Grid for Social Apps -->
+          <div class="grid grid-cols-3 gap-2">
+            
+            <!-- 2. WhatsApp -->
+            <a id="btnWhatsAppShare" href="#" target="_blank" class="flex flex-col items-center justify-center gap-1 bg-[#25D366] hover:bg-[#20ba5a] text-white p-2.5 rounded-xl text-xs font-semibold shadow transition-transform hover:scale-102">
+              <img src="assets/icons/whatsapp.svg" alt="WhatsApp" class="w-5 h-5">
+              <span class="text-[10px]">WhatsApp</span>
+            </a>
+
+            <!-- 3. Instagram Hikaye -->
+            <button onclick="openInstagramModal('story')" class="flex flex-col items-center justify-center gap-1 bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white p-2.5 rounded-xl text-xs font-semibold shadow transition-transform hover:scale-102">
+              <img src="assets/icons/instagram.svg" alt="Instagram Story" class="w-5 h-5">
+              <span class="text-[10px]">IG Hikaye</span>
+            </button>
+
+            <!-- 4. Instagram Gönderi -->
+            <button onclick="openInstagramModal('post')" class="flex flex-col items-center justify-center gap-1 bg-gradient-to-tr from-[#405de6] via-[#833ab4] to-[#c13584] text-white p-2.5 rounded-xl text-xs font-semibold shadow transition-transform hover:scale-102">
+              <img src="assets/icons/instagram.svg" alt="Instagram Post" class="w-5 h-5">
+              <span class="text-[10px]">IG Gönderi</span>
+            </button>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- LCV / RSVP PARTICIPATION FORM -->
+      <div id="rsvpSection" class="bg-white/90 border border-wedding-gold/30 rounded-2xl p-6 shadow-xl text-center mb-8 relative">
+        <span class="text-xs font-bold tracking-[0.2em] uppercase text-wedding-goldDark">Katılım Bildirimi</span>
+        <h3 class="font-serif text-xl font-bold text-wedding-charcoal mt-1 mb-2">LCV Formu</h3>
+        <p class="text-xs text-wedding-slate mb-4">Lütfen düğünümüz öncesinde katılım durumunuzu bildiriniz.</p>
+
+        <form id="rsvpForm" onsubmit="handleRSVPSubmit(event)" class="space-y-3.5 text-left">
+          <div>
+            <label class="block text-xs font-semibold text-wedding-charcoal mb-1">Adınız Soyadınız *</label>
+            <input type="text" id="rsvpName" required placeholder="Örn: Ahmet Yılmaz" class="w-full px-3.5 py-2.5 rounded-xl border border-wedding-gold/30 bg-wedding-ivory/50 text-sm focus:outline-none focus:ring-2 focus:ring-wedding-gold">
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-wedding-charcoal mb-1">Katılınacak Etkinlik *</label>
+              <select id="rsvpCity" class="w-full px-3 py-2.5 rounded-xl border border-wedding-gold/30 bg-wedding-ivory/50 text-sm focus:outline-none focus:ring-2 focus:ring-wedding-gold">
+                <option value="Viranşehir Düğün Salonu">Viranşehir Düğün Salonu (20 Ağustos)</option>
+                <option value="Saray Kır Bahçesi">Saray Kır Bahçesi (27 Ağustos)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-wedding-charcoal mb-1">Kişi Sayısı *</label>
+              <select id="rsvpGuests" class="w-full px-3 py-2.5 rounded-xl border border-wedding-gold/30 bg-wedding-ivory/50 text-sm focus:outline-none focus:ring-2 focus:ring-wedding-gold">
+                <option value="1">1 Kişi</option>
+                <option value="2">2 Kişi</option>
+                <option value="3">3 Kişi</option>
+                <option value="4+">4+ Kişi</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-wedding-charcoal mb-1">Tebrik / Notunuz (İsteğe Bağlı)</label>
+            <textarea id="rsvpNote" rows="2" placeholder="Vahit & Bahar çiftimize bir mesaj bırakın..." class="w-full px-3.5 py-2 rounded-xl border border-wedding-gold/30 bg-wedding-ivory/50 text-sm focus:outline-none focus:ring-2 focus:ring-wedding-gold"></textarea>
+          </div>
+
+          <button type="submit" class="w-full py-3 bg-wedding-goldDark hover:bg-wedding-charcoal text-white rounded-xl text-xs font-bold uppercase tracking-widest shadow-md transition-colors">
+            Katılımı Onayla & Gönder
+          </button>
+        </form>
+
+        <div id="rsvpSuccessMsg" class="hidden p-4 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs font-medium mt-3">
+          ✓ Katılım talebiniz başarıyla kaydedilmiştir. Teşekkür ederiz!
+        </div>
+      </div>
+
+      <!-- FAMILY NAMES & SMALL COPYRIGHT FOOTER CARD -->
+      <div class="text-center py-6 border-t border-wedding-gold/20">
+        <span class="text-xs font-semibold tracking-[0.2em] uppercase text-wedding-gold">Ailelerimiz</span>
+        <div class="grid grid-cols-2 gap-4 mt-3 max-w-sm mx-auto font-serif">
+          <div class="p-3 bg-wedding-cream/60 rounded-xl border border-wedding-gold/20">
+            <p class="text-xs text-gray-500 font-sans uppercase">Damat Tarafı</p>
+            <p class="font-bold text-wedding-charcoal text-sm mt-0.5">Keskin Ailesi</p>
+          </div>
+          <div class="p-3 bg-wedding-cream/60 rounded-xl border border-wedding-gold/20">
+            <p class="text-xs text-gray-500 font-sans uppercase">Gelin Tarafı</p>
+            <p class="font-bold text-wedding-charcoal text-sm mt-0.5">Yılgın Ailesi</p>
+          </div>
+        </div>
+
+        <!-- SMALL COPYRIGHT TEXT (KÜÇÜK YAZI) -->
+        <p class="text-[10px] text-wedding-slate/70 font-sans tracking-wider uppercase mt-8 opacity-80">
+          © 2026 Davetiyem - Tüm Hakları vahitkeskin'e Aittir.
+        </p>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- INSTAGRAM STORY / POST PREVIEW MODAL -->
+  <div id="instagramModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 hidden transition-opacity duration-300">
+    <div class="bg-wedding-ivory border-2 border-wedding-gold/40 rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl relative">
+      
+      <button onclick="closeInstagramModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 p-1 text-xl font-bold">✕</button>
+
+      <span class="text-xs font-bold tracking-widest uppercase text-wedding-goldDark">Instagram Görsel Oluşturucu</span>
+      <h3 id="igModalTitle" class="font-serif text-lg font-bold text-wedding-charcoal mt-1 mb-3">Instagram Hikaye Kartı</h3>
+
+      <!-- Dynamic Canvas Preview for Download -->
+      <div class="relative mx-auto rounded-2xl overflow-hidden shadow-lg border border-wedding-gold/30 bg-wedding-cream mb-4">
+        <canvas id="igShareCanvas" class="w-full h-auto max-h-[320px] object-contain mx-auto block rounded-xl"></canvas>
+      </div>
+
+      <p class="text-xs text-gray-500 mb-4">Aşağıdaki butona tıklayarak davetiye şablonunu cihazınıza indirebilir ve Instagram'da paylaşabilirsiniz.</p>
+
+      <button onclick="downloadIGCard()" class="w-full py-3 bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 text-white font-bold text-xs uppercase tracking-widest rounded-xl shadow-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+        <span>Görseli Cihaza İndir</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-wedding-charcoal text-wedding-ivory px-5 py-3 rounded-full text-xs font-medium shadow-2xl border border-wedding-gold/40 flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <span id="toastIcon">✨</span>
+    <span id="toastMsg">İşlem başarıyla gerçekleştirildi.</span>
+  </div>
+
+  <!-- Application JS Script -->
+  <script src="app.js"></script>
+</body>
+</html>

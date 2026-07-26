@@ -1,0 +1,93 @@
+/* Custom CSS Design System - Dijital Düğün Davetiyesi */
+
+@keyframes soundbar {
+  0%, 100% { height: 4px; }
+  50% { height: 14px; }
+}
+
+.animate-soundbar-1 { animation: soundbar 0.8s ease-in-out infinite; }
+.animate-soundbar-2 { animation: soundbar 1.1s ease-in-out infinite 0.2s; }
+.animate-soundbar-3 { animation: soundbar 0.9s ease-in-out infinite 0.4s; }
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-shimmer {
+  animation: shimmer 2.5s infinite;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-down {
+  animation: fadeInDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* 3D Envelope perspective & animations */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.envelope-wrapper {
+  transition: transform 0.4s ease;
+}
+
+.envelope-wrapper:hover {
+  transform: translateY(-4px) scale(1.02);
+}
+
+.envelope-flap.open {
+  transform: rotateX(180deg);
+  z-index: 10 !important;
+}
+
+.envelope-card.slide-out {
+  transform: translateY(-90px) scale(1.05);
+  z-index: 25 !important;
+}
+
+.wax-seal.break {
+  transform: translate(-50%, -50%) scale(1.4);
+  opacity: 0;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #FDFBF7;
+}
+::-webkit-scrollbar-thumb {
+  background: #D4AF37;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #B8860B;
+}
+
+/* City Tab Button Active styling */
+.city-tab-btn {
+  border-color: transparent;
+}
+.city-tab-btn.active {
+  background-color: #FDFBF7 !important;
+  color: #B8860B !important;
+  border-color: rgba(212, 175, 55, 0.5) !important;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15) !important;
+}
+
+/* Touch device active feedback */
+button:active, a:active {
+  -webkit-tap-highlight-color: transparent;
+}
